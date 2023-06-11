@@ -20,10 +20,10 @@ Time complexity:
 1. Sorting the indices of nums1 takes O(n * log(n)), where n is the length of nums1.
 2. Sorting the indices of queries takes O(n_queries * log(n_queries)), where n_queries is the length of queries.
 3. Iterating through the queries and processing each query requires a loop that runs for n_queries iterations. Within each iteration, we perform operations like removing elements from the stack and performing binary search. These operations take O(log(n)) time complexity.
-Overall: O(n * log(n) + n_queries * log(n_queries) + n_queries * log(n)).
+Overall: O(n * log(n) + n_queries * log(n_queries) + n_queries * log(n))/ O((n + q)logn + qlogq).
 
 Space complexity:
 1. The additional arrays indices1 and indices_q have sizes of n and n_queries, respectively. Therefore, they contribute O(n + n_queries) space complexity.
 2. The stack st stores pairs of values and can have at most n elements if all elements of nums1 satisfy the conditions. Hence, it contributes O(n) space complexity.
 3. The resulting vector ret has n_queries elements. Therefore, it contributes O(n_queries) space complexity.
-Overall: the space complexity is O(n + n_queries).
+Overall: the space complexity is O(n + n_queries) / O(n).
