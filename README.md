@@ -16,67 +16,14 @@
 - If a valid pair is found, assign its second value as the result for the current query. Otherwise, assign -1 to indicate that no valid pair was found.
 5. Return the resulting vector ret containing the maximum sums for each query.
 # Complexity
-- Time complexity:
-O(n * log(n) + n_queries * log(n_queries) + n_queries * log(n))
-- Space complexity:
- O(n + n_queries)
-# Code
-```
-/**
- * Time Complexity: O(n * log(n) + n_queries * log(n_queries) + n_queries * log(n))
- * Space Complexity: O(n + n_queries)
- * where `n` is the length of the vector `nums1`
- *       `n_queries` is the length of the vector `queries`
- */
-/**
- * Time Complexity: O(n * log(n) + n_queries * log(n_queries) + n_queries * log(n))
- * Space Complexity: O(n + n_queries)
- * where `n` is the length of the vector `nums1`
- *       `n_queries` is the length of the vector `queries`
- */
-class Solution {
-private:
-  using st_node_t = pair<int, int>;
-  
-  static constexpr int cant_find = -1;
-  
-public:
-  vector<int> maximumSumQueries(const vector<int> &nums1,
-                                const vector<int> &nums2,
-                                const vector<vector<int>> &queries) {
-    const int n = static_cast<int>(nums1.size());
-    int indices1[n];
-    iota(indices1, indices1 + n, 0);
-    sort(indices1, indices1 + n, [&nums1](const int lhs, const int rhs) -> bool {
-      return nums1[lhs] > nums1[rhs];
-    });
-    
-    const int n_queries = static_cast<int>(queries.size());
-    int indices_q[n_queries];
-    iota(indices_q, indices_q + n_queries, 0);
-    sort(indices_q, indices_q + n_queries, [&queries](const int lhs, const int rhs) -> bool {
-      return queries[lhs].front() > queries[rhs].front();
-    });
-    
-    vector<int> ret(n_queries, cant_find);
-    vector<st_node_t> st;
-    for (int j = 0, i = 0; i < n_queries; ++i) {
-      const int i_query = indices_q[i];
-      const int q_num1 = queries[i_query].front();
-      const int q_num2 = queries[i_query].back();
-      for (; j < n && nums1[indices1[j]] >= q_num1; ++j) {
-        const int num1 = nums1[indices1[j]];
-        const int num2 = nums2[indices1[j]];
-        while (!st.empty() && st.back().second <= num1 + num2) {
-          st.pop_back();
-        }
-        if (st.empty() || st.back().first < num2) {
-          st.emplace_back(num2, num1 + num2);
-        }
-      }
-      auto lb = lower_bound(st.begin(), st.end(), make_pair(q_num2, 0));
-      ret[i_query] = lb == st.end() ? cant_find : lb->second;
-    }
-    return ret;
-  }
-};
+Time complexity:
+1. Sorting the indices of nums1 takes O(n * log(n)), where n is the length of nums1.
+2. Sorting the indices of queries takes O(n_queries * log(n_queries)), where n_queries is the length of queries.
+3. Iterating through the queries and processing each query requires a loop that runs for n_queries iterations. Within each iteration, we perform operations like removing elements from the stack and performing binary search. These operations take O(log(n)) time complexity.
+Overall: O(n * log(n) + n_queries * log(n_queries) + n_queries * log(n)).
+
+Space complexity:
+1. The additional arrays indices1 and indices_q have sizes of n and n_queries, respectively. Therefore, they contribute O(n + n_queries) space complexity.
+2. The stack st stores pairs of values and can have at most n elements if all elements of nums1 satisfy the conditions. Hence, it contributes O(n) space complexity.
+3. The resulting vector ret has n_queries elements. Therefore, it contributes O(n_queries) space complexity.
+Overall: the space complexity is O(n + n_queries).
